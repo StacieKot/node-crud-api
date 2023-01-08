@@ -8,8 +8,7 @@
     "start:dev": "npm run lint && npx nodemon",
     "start:prod": "npm run build && node dist/index.js",
     "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
