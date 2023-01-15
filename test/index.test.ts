@@ -5,6 +5,12 @@ import { IUser } from "../src/store";
 import { validationMessage } from "../src/utils";
 
 const API = "/api/users";
+let users = {};
+
+jest.mock("../src/db", () => ({
+  getUsersData: () => Promise.resolve(users),
+  updateUsersData: jest.fn((updatedUsers) => (users = updatedUsers)),
+}));
 
 describe("First scenario - create/update/delete user", () => {
   const newUser: IUser = {

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "start:dev": "npm run lint && npx nodemon",
-    "start:prod": "npm run build && node dist/index.js",
+    "start:prod": "npm run build && node ./dist/index.js",
+    "start:multi": "npm run build && node ./dist/index.js --cluster=enable",
     "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "test": "jest --coverage"
   },

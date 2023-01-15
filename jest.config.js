@@ -1,7 +1,9 @@
 module.exports = {
-  preset: "ts-jest",
+  moduleFileExtensions: ["js", "json", "ts"],
+  rootDir: "./",
   testEnvironment: "node",
-  globals: { "ts-jest": { isolatedModules: true } },
-  transform: { "^.+\\.(t|j)s$": "ts-jest" },
-  moduleNameMapper: {},
+  testRegex: ".test.ts$",
+  transform: {
+    "^.+\\.(t|j)s$": "ts-jest",
+  },
 };

@@ -1,10 +1,9 @@
 import { RequestMethod, StatusCode, StatusMessage } from "../constants";
-import { users } from "../store";
 import { getResponseData, getUUID, isValidUUID, validateUser } from "../utils";
 import { IUser } from "../store/users";
 import { IResponse } from "./types";
 
-export const getUsers = (): IResponse => {
+export const getUsers = (users: Record<string, IUser>): IResponse => {
   return {
     data: Object.values(users),
     message: StatusMessage.Ok,
@@ -12,7 +11,10 @@ export const getUsers = (): IResponse => {
   };
 };
 
-export const getUser = (userId = ""): IResponse => {
+export const getUser = (
+  users: Record<string, IUser>,
+  userId = ""
+): IResponse => {
   if (!isValidUUID(userId)) {
     return getResponseData(StatusCode.BAD_REQUEST, StatusMessage.badUUID);
   }
@@ -24,7 +26,11 @@ export const getUser = (userId = ""): IResponse => {
     : getResponseData(StatusCode.NOT_FOUND, StatusMessage.userNotFound);
 };
 
-export const createUser = (user = {} as IUser, userId = ""): IResponse => {
+export const createUser = (
+  users: Record<string, IUser>,
+  user = {} as IUser,
+  userId = ""
+): IResponse => {
   if (userId) {
     return getResponseData(
       StatusCode.BAD_REQUEST,
@@ -49,15 +55,13 @@ export const createUser = (user = {} as IUser, userId = ""): IResponse => {
   );
 };
 
-export const updateUser = (user = {} as IUser, userId = "") => {
+export const updateUser = (
+  users: Record<string, IUser>,
+  user = {} as IUser,
+  userId = ""
+) => {
   if (!isValidUUID(userId)) {
     return getResponseData(StatusCode.BAD_REQUEST, StatusMessage.badUUID);
-  }
-
-  const { isValid, errorMessage } = validateUser(user);
-
-  if (!isValid) {
-    return getResponseData(StatusCode.BAD_REQUEST, errorMessage);
   }
 
   const userData = users[userId];
@@ -66,12 +70,21 @@ export const updateUser = (user = {} as IUser, userId = "") => {
     return getResponseData(StatusCode.NOT_FOUND, StatusMessage.userNotFound);
   }
 
+  const { isValid, errorMessage } = validateUser(user);
+
+  if (!isValid) {
+    return getResponseData(StatusCode.BAD_REQUEST, errorMessage);
+  }
+
   users[userId] = { ...user, id: userData.id };
 
   return getResponseData(StatusCode.OK, StatusMessage.Ok, users[userId]);
 };
 
-export const deleteUser = (userId = ""): IResponse => {
+export const deleteUser = (
+  users: Record<string, IUser>,
+  userId = ""
+): IResponse => {
   if (!isValidUUID(userId)) {
     return getResponseData(StatusCode.BAD_REQUEST, StatusMessage.badUUID);
   }
@@ -90,17 +103,18 @@ export const deleteUser = (userId = ""): IResponse => {
 export const handleUserRequest = (
   method: RequestMethod,
   user: IUser,
+  users: Record<string, IUser>,
   userId?: string
 ): IResponse => {
   switch (method) {
     case RequestMethod.GET:
       const handler = userId ? getUser : getUsers;
-      return handler(userId);
+      return handler(users, userId);
     case RequestMethod.POST:
-      return createUser(user, userId);
+      return createUser(users, user, userId);
     case RequestMethod.PUT:
-      return updateUser(user, userId);
+      return updateUser(users, user, userId);
     case RequestMethod.DELETE:
-      return deleteUser(userId);
+      return deleteUser(users, userId);
   }
 };

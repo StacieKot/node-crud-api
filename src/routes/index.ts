@@ -3,23 +3,30 @@ import { handleUserRequest } from "./users";
 import { IUser } from "../store/users";
 import { handleNotExistingRoute } from "./notFound";
 import { IResponse } from "./types";
+import { getUsersData, updateUsersData } from "../db";
 
 const handlersConfig = {
   [Route.users]: handleUserRequest,
 };
 
-export const handleRequest = (
+export const handleRequest = async (
   path = "",
   method: RequestMethod,
   body: IUser = {} as IUser
-): IResponse => {
-  const [api, users, userId, ...rest] = path
+): Promise<IResponse> => {
+  const [apiPath, usersPath, userId, ...rest] = path
     .split("/")
     .filter((value) => value);
 
   const handler =
-    (!rest.length && handlersConfig[`${api}/${users}` as Route]) ||
+    (!rest.length && handlersConfig[`${apiPath}/${usersPath}` as Route]) ||
     handleNotExistingRoute;
 
-  return handler(method, body, userId);
+  const users = await getUsersData();
+
+  const response = handler(method, body, users, userId);
+
+  updateUsersData(users);
+
+  return response;
 };

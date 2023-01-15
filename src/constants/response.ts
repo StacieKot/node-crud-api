@@ -9,8 +9,8 @@ export enum StatusCode {
 
 export enum StatusMessage {
   Ok = "OK",
-  Created = "CREATED",
-  Deleted = "DELETED",
+  Created = "User was successfully created",
+  Deleted = "User was successfully deleted",
   badUUID = "Invalid UUID",
   userNotFound = "User not found",
   notFound = "The endpoint you are trying to reach doesn't exist",

@@ -17,7 +17,7 @@ export const validateUser = ({
     errors.push(`username ${validationMessage.fieldIsRequired}`);
   }
 
-  if ((!age && age !== 0) || age > 150) {
+  if (!age && age !== 0) {
     errors.push(`age ${validationMessage.fieldIsRequired}`);
   }
 
